@@ -4,7 +4,10 @@
 #include <time.h>
 #include <math.h>
 #include <unistd.h>
-
+#include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "data_reader.h"
 
 uint16_t arduinoAdc(int sample);
 
@@ -23,16 +26,29 @@ uint16_t arduinoAdc(int sample){
     float res = 2.5 + sin(rad);
     return 1023/res;
 }
+void runContinous(pClient client);
 
-void app_main(pCfg cfg, pClient client){
-	client->init(client, cfg);
-	uint64_t last_event = get_posix_clock_time();
+void app_main(pCfg cfg, pClient client) {
+    client->init(client, cfg);
+
+
+    if (cfg->continous) {
+        runContinous(client);
+    }
+    pCallbacks callbacks = malloc(sizeof(tCallbacks));
+
+    readData(cfg,callbacks);
+
+}
+
+void runContinous(pClient client){
+    uint64_t last_event = get_posix_clock_time();
     uint64_t next_event = last_event + 1000;
-    int i=0;
-	while(true){
-		uint16_t read=arduinoAdc(i++);
+    int i = 0;
+    while(true){
+        uint16_t read=arduinoAdc(i++);
         char tmp[255];
-		uint8_t msg_len = sprintf(tmp,"{time:%llu, value:%u}",get_posix_clock_time()/1000, read);
+        uint8_t msg_len = sprintf(tmp,"{time:%llu, value:%u}",get_posix_clock_time()/1000, read);
         client->send(client,tmp,msg_len);
         uint64_t now= get_posix_clock_time();
         last_event = next_event;
@@ -47,7 +63,6 @@ void app_main(pCfg cfg, pClient client){
             next_event = last_event + 1000;
         }
         usleep(last_event-now);
-
     }
 }
 

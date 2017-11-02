@@ -13,7 +13,7 @@ IF(NOT LIB_PAHO)
     MESSAGE(FATAL_ERROR "ERROR: unable to link MQTT")
 ENDIF(NOT LIB_PAHO)
 
-set(COMMON_SOURCE_FILES common/cmdparse.c common/common.c)
+set(COMMON_SOURCE_FILES common/cmdparse.c common/common.c common/data_reader.c common/data_reader.h)
 set(MQTT_SOURCE_FILES mqtt/mqtt.c)
 add_definitions(-DVERSION=\"${PROJECT_VERSION}\")
 
