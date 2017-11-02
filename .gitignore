@@ -78,3 +78,5 @@ install_manifest.txt
 *.cubin
 *.fatbin
 
+.idea/
+cmake-build-debug/
