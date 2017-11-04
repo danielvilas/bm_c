@@ -3,6 +3,7 @@
 
 #include "cmdparse.h"
 #include "client.h"
+#include "types.h"
 #include <stdint.h>
 
 void printCommon(void);
@@ -16,8 +17,8 @@ typedef tCallbacks* pCallbacks;
 
 struct sCallbacks{
     pClient client;
-    int (*init)(pClient self, pCfg cfg);
-    int (*send)(pClient self, char *data, unsigned int len );
+    void (*pushLogData)(pLogData logData, pCallbacks callbacks);
+    void (*pushLogPacket)(pLogPacket logPacket, pCallbacks callbacks);
 };
 
 #endif

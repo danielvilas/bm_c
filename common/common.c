@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "data_reader.h"
+#include "packet_reader.h"
+#include "../process-basic/process-basic.h"
 
 uint16_t arduinoAdc(int sample);
 
@@ -36,6 +38,9 @@ void app_main(pCfg cfg, pClient client) {
         runContinous(client);
     }
     pCallbacks callbacks = malloc(sizeof(tCallbacks));
+    callbacks->client=client;
+    callbacks->pushLogData=&packageReader;
+    callbacks->pushLogPacket=&basicProcess;
 
     readData(cfg,callbacks);
 
