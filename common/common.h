@@ -5,6 +5,7 @@
 #include "client.h"
 #include "types.h"
 #include <stdint.h>
+#include <doublefann.h>
 
 void printCommon(void);
 
@@ -17,6 +18,7 @@ typedef tCallbacks* pCallbacks;
 
 struct sCallbacks{
     pClient client;
+    struct fann *net;
     void (*pushLogData)(pLogData logData, pCallbacks callbacks);
     void (*pushLogPacket)(pLogPacket logPacket, pCallbacks callbacks);
 };

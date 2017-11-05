@@ -1,0 +1,8 @@
+find_library(LIB_FFTW fftw3)
+IF(LIB_FFTW)
+    MESSAGE(STATUS "FFTW libraries founded: OK ${LIB_FFTW}")
+ENDIF(LIB_FFTW)
+
+IF(NOT LIB_FFTW)
+    MESSAGE(FATAL_ERROR "ERROR: unable to link FFTW")
+ENDIF(NOT LIB_FFTW)

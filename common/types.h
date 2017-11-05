@@ -28,9 +28,20 @@ struct sLogPacket{
     tLogData logData[LOG_PACKET_SIZE];
 };
 
-
-
 void readLogData(pLogData data, char* str);
+
+typedef struct sParsedPacket tParsedPacket;
+typedef tParsedPacket* pParsedPacket;
+
+struct sParsedPacket{
+    uint64_t date;
+    double tv;
+    double bluray;
+    double appleTv;
+    double ipTv;
+};
+
+void readParsedPacket(pParsedPacket packet, uint64_t date, double* result);
 
 
 #endif //BMC_TYPES_H

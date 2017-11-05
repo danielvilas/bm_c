@@ -3,14 +3,16 @@
 #include <stdio.h>
 #include "string.h"
 #include <MQTTClient.h>
+#include <lzma.h>
+#include <inttypes.h>
 
 #define CLIENTID    "bmc_mqtt"
-#define TOPIC       "bmmqtt/data"
+#define TOPIC       "AppliancesBucket"
 #define QOS         1
 #define TIMEOUT     10000L
 
 int mqtt_init(pClient self, pCfg cfg);
-int mqtt_send(pClient self, char *data, unsigned int len );
+int mqtt_send(pClient self, pParsedPacket data );
 
 pClient createMqttClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
@@ -55,13 +57,25 @@ int mqtt_init(pClient self, pCfg cfg){
     }
     return 0;
 }
-int mqtt_send(pClient self, char *data, unsigned int len ){
+
+
+
+int mqtt_send(pClient self, pParsedPacket data ){
     //printf("mqtt_send(%x):%s [%i]\n",self,data, strlen(data));
     MQTTClient_message pubmsg = MQTTClient_message_initializer;
     MQTTClient_deliveryToken token;
 
-    pubmsg.payload = data;
-    pubmsg.payloadlen = strlen(data);
+    char tmp[1024];
+    sprintf(tmp,"{"
+            "\"date\": %"SCNu64","
+            "\"tv\": %lf,"
+            "\"bluray\": %lf,"
+            "\"appleTv\": %lf,"
+            "\"ipTv\":  %lf"
+            "}",data->date, data->tv,data->bluray,data->bluray,data->ipTv);
+
+    pubmsg.payload = tmp;
+    pubmsg.payloadlen = strlen(tmp);
     pubmsg.qos = QOS;
     pubmsg.retained = 0;
     MQTTClient *client =(MQTTClient *)self->obj;

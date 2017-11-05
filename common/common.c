@@ -41,9 +41,10 @@ void app_main(pCfg cfg, pClient client) {
     callbacks->client=client;
     callbacks->pushLogData=&packageReader;
     callbacks->pushLogPacket=&basicProcess;
-
+    callbacks->net = fann_create_from_file("data/net_16000.net");
     readData(cfg,callbacks);
 
+    fann_destroy(callbacks->net);
 }
 
 void runContinous(pClient client){
@@ -53,8 +54,8 @@ void runContinous(pClient client){
     while(true){
         uint16_t read=arduinoAdc(i++);
         char tmp[255];
-        uint8_t msg_len = sprintf(tmp,"{time:%llu, value:%u}",get_posix_clock_time()/1000, read);
-        client->send(client,tmp,msg_len);
+        //uint8_t msg_len = sprintf(tmp,"{time:%llu, value:%u}",get_posix_clock_time()/1000, read);
+        //client->send(client,tmp);
         uint64_t now= get_posix_clock_time();
         last_event = next_event;
         next_event = last_event + 1000;

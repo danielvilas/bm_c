@@ -69,11 +69,12 @@ void readData(pCfg cfg, pCallbacks callbacks){
     {
         while ((dir = readdir(d)) != NULL)
         {
-            if (i>0 && dir->d_type == DT_REG) //i>0 omite el de las 15 que el primer paquete esta mal
+            if (dir->d_type == DT_REG) //i>0 omite el de las 15 que el primer paquete esta mal
             {
+                //if(i>0)
                 readFileContents(dir,path, callbacks);
+                i++;
             }
-            i++;
         }
 
         closedir(d);

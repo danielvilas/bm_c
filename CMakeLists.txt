@@ -7,30 +7,17 @@ set(CMAKE_C_STANDARD 99)
 
 include(DarwinCheck)
 
-find_library(LIB_PAHO paho-mqtt3c)
-IF(LIB_PAHO)
-    MESSAGE(STATUS "MQTT libraries founded: OK - ${LIB_PAHO}")
-ENDIF(LIB_PAHO)
+include(libPaho)
+include(libFftw)
+include(libFann)
 
-IF(NOT LIB_PAHO)
-    MESSAGE(FATAL_ERROR "ERROR: unable to link MQTT")
-ENDIF(NOT LIB_PAHO)
-
-find_library(LIB_FFTW fftw3)
-IF(LIB_FFTW)
-    MESSAGE(STATUS "FFTW libraries founded: OK ${LIB_FFTW}")
-ENDIF(LIB_FFTW)
-
-IF(NOT LIB_FFTW)
-    MESSAGE(FATAL_ERROR "ERROR: unable to link FFTW")
-ENDIF(NOT LIB_FFTW)
 
 set(BASIC_SOURCE_FILES process-basic/process-basic.c process-basic/process-basic.h)
 set(COMMON_SOURCE_FILES ${BASIC_SOURCE_FILES} common/cmdparse.c common/common.c common/data_reader.c common/data_reader.h common/types.c common/types.h common/packet_reader.c common/packet_reader.h common/client.h)
 set(MQTT_SOURCE_FILES mqtt/mqtt.c)
 add_definitions(-DVERSION=\"${PROJECT_VERSION}\")
 
-set(COMMON_LIBS fftw3 m)
+set(COMMON_LIBS fftw3 m doublefann)
 
 #Executables
 add_executable(bmc_full ${COMMON_SOURCE_FILES} ${MQTT_SOURCE_FILES} full.c)

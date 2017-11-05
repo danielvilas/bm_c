@@ -1,0 +1,8 @@
+find_library(LIB_FANN fann)
+IF(LIB_FANN)
+    MESSAGE(STATUS "FANN libraries founded: OK ${LIB_FANN}")
+ENDIF(LIB_FANN)
+
+IF(NOT LIB_FANN)
+    MESSAGE(FATAL_ERROR "ERROR: unable to link FANN")
+ENDIF(NOT LIB_FANN)
