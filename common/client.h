@@ -9,6 +9,7 @@ struct sClient{
     void *obj;
     int (*init)(pClient self, pCfg cfg);
     int (*send)(pClient self, pParsedPacket data);
+    int (*close)(pClient self);
 };
 
 

@@ -17,11 +17,14 @@ static rd_kafka_t *rk;
 
 int kafka_init(pClient self, pCfg cfg);
 int kafka_send(pClient self, pParsedPacket data );
+int kafka_close(pClient self);
+
 
 pClient createKafkaClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
     ret->init=kafka_init;
     ret->send=kafka_send;
+    ret->close=kafka_close;
     pKafkaObjs *client;
     client =( pKafkaObjs*) malloc(sizeof(pKafkaObjs));
     ret->obj=client;

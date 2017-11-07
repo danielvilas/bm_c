@@ -13,11 +13,13 @@
 
 int mqtt_init(pClient self, pCfg cfg);
 int mqtt_send(pClient self, pParsedPacket data );
+int mqtt_close(pClient self);
 
 pClient createMqttClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
     ret->init=mqtt_init;
     ret->send=mqtt_send;
+    ret->close =mqtt_close;
     MQTTClient *client;
     client =( MQTTClient*) malloc(sizeof(MQTTClient));
     ret->obj=client;
@@ -89,4 +91,10 @@ int mqtt_send(pClient self, pParsedPacket data ){
     //printf("Message with delivery token %d delivered\n", token);
 
      return 0;
+}
+
+int mqtt_close(pClient self){
+    MQTTClient *client =(MQTTClient *)self->obj;
+    MQTTClient_disconnect(client,100);
+    MQTTClient_destroy(client);
 }

@@ -45,6 +45,7 @@ void app_main(pCfg cfg, pClient client) {
     readData(cfg,callbacks);
 
     fann_destroy(callbacks->net);
+    client->close(callbacks->client);
 }
 
 void runContinous(pClient client){
