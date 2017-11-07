@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "string.h"
 #include <MQTTClient.h>
-#include <lzma.h>
+//#include <lzma.h>
 #include <inttypes.h>
 
 #define CLIENTID    "bmc_mqtt"

@@ -2,6 +2,8 @@
 #include "common/common.h"
 #include "common/cmdparse.h"
 #include "mqtt/mqtt.h"
+#include "protocol-kafka/kafka.h"
+
 
 int main(int argc, char** argv){
 	tCfg cfg;
@@ -15,7 +17,7 @@ int main(int argc, char** argv){
 		case WS:
 			printf("WS\n");break;
 		case KAFKA:
-			printf("KAFKA\n");break;
+			client=createKafkaClient();break;
 		case UNDEFINED:
 			printf("UNDEFINED\n");break;
 		}

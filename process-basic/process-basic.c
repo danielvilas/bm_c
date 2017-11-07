@@ -2,7 +2,7 @@
 // Created by Daniel Vilas Perulan on 4/11/17.
 //
 
-#include <printf.h>
+#include <stdio.h>
 #include "process-basic.h"
 
 #include <fftw3.h>
