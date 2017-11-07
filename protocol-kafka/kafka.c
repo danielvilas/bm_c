@@ -11,7 +11,7 @@
 #include "kafka.h"
 
 #define BROKER_PATH "/brokers/ids"
-const int debug=1;
+const int debug=0;
 
 static rd_kafka_t *rk;
 
@@ -231,10 +231,8 @@ int kafka_send(pClient self, pParsedPacket data ){
             NULL) == -1) {
         fprintf(stderr,
                 "%% Failed to produce to topic %s "
-                        "partition %i: %s\n",
-                rd_kafka_topic_name(kafka->rkt), partition,
-                rd_kafka_err2str(
-                        rd_kafka_errno2err(errno)));
+                        "partition %i: %i\n",
+                rd_kafka_topic_name(kafka->rkt), partition, errno);
         // Poll to handle delivery reports
         rd_kafka_poll(rk, 0);
     }
