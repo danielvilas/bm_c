@@ -66,6 +66,8 @@ do{
 				cfg->proto=WS;
 			}else if (!strcasecmp(optarg,"KAFKA")){
 				cfg->proto=KAFKA;
+			}else if (!strcasecmp(optarg,"REST")){
+				cfg->proto=REST;
 			}else{
 				printHelp(argv[0]);
 				return PARSE_ERROR;
@@ -98,7 +100,7 @@ void printHelp(char *name){
 	printf(" -d, --dataset <datafile>\tDataSet to use\n");
 	printf(" -c, --continous\tEnable continuos mode\n");
 #ifdef FULL
-    printf(" -p, --protocol\tClient to use MQTT|WS|Kafka\n");
+    printf(" -p, --protocol\tClient to use MQTT|WS|KAFKA|REST\n");
 #endif
 }
 
@@ -112,6 +114,8 @@ switch(cfg->proto){
 		printf("WS\n");break;
 	case KAFKA:
 		printf("KAFKA\n");break;
+	case REST:
+		printf("REST\n");break;
 	case UNDEFINED:
 		printf("UNDEFINED\n");break;
 }

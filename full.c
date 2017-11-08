@@ -3,6 +3,7 @@
 #include "common/cmdparse.h"
 #include "mqtt/mqtt.h"
 #include "protocol-kafka/kafka.h"
+#include "protocol-rest/rest.h"
 
 
 int main(int argc, char** argv){
@@ -18,8 +19,10 @@ int main(int argc, char** argv){
 			printf("WS\n");break;
 		case KAFKA:
 			client=createKafkaClient();break;
+        case REST:
+	        client=createRestClient();break;
 		case UNDEFINED:
-			printf("UNDEFINED\n");break;
+			printf("UNDEFINED\n");return -1;
 		}
 		app_main(&cfg,client);
 	}

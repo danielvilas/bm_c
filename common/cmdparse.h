@@ -3,7 +3,7 @@
 #include <stdbool.h> 
 
 #ifdef FULL
-enum eProtocol{UNDEFINED,MQTT,WS,KAFKA};
+enum eProtocol{UNDEFINED,MQTT,WS,KAFKA,REST};
 typedef enum eProtocol tProtocol;
 
 #endif

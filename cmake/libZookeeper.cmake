@@ -1,0 +1,8 @@
+find_library(LIB_ZOOKEEPER zookeeper_mt)
+IF(LIB_ZOOKEEPER)
+    MESSAGE(STATUS "Zookeeper libraries founded: OK ${LIB_ZOOKEEPER}")
+ENDIF(LIB_ZOOKEEPER)
+
+IF(NOT LIB_ZOOKEEPER)
+    MESSAGE(FATAL_ERROR "ERROR: unable to link Zookeeper")
+ENDIF(NOT LIB_ZOOKEEPER)
