@@ -4,6 +4,7 @@
 #include "mqtt/mqtt.h"
 #include "protocol-kafka/kafka.h"
 #include "protocol-rest/rest.h"
+#include "protocol-soap/soap.h"
 
 
 int main(int argc, char** argv){
@@ -16,7 +17,7 @@ int main(int argc, char** argv){
 		case MQTT:
 			client = createMqttClient();break;
 		case WS:
-			printf("WS\n");break;
+			client = createSoapClient();break;
 		case KAFKA:
 			client=createKafkaClient();break;
         case REST:

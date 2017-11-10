@@ -68,7 +68,7 @@ int rest_send(pClient self, pParsedPacket data ){
             "\"bluraySeconds\": %lf,"
             "\"appleTvSeconds\": %lf,"
             "\"ipTvSeconds\":  %lf"
-            "}",data->date, data->tv,data->bluray,data->bluray,data->ipTv);
+            "}",data->date, data->tv,data->bluray,data->appleTv,data->ipTv);
 
     curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, tmp);
 

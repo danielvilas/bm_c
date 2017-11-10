@@ -21,6 +21,7 @@ set(COMMON_SOURCE_FILES ${BASIC_SOURCE_FILES} common/cmdparse.c common/common.c 
 set(MQTT_SOURCE_FILES mqtt/mqtt.c mqtt/mqtt.h)
 set(KAFKA_SOURCE_FILES protocol-kafka/kafka.c protocol-kafka/kafka.h)
 set(REST_SOURCE_FILES protocol-rest/rest.c protocol-rest/rest.h)
+set(SOAP_SOURCE_FILES protocol-soap/soap.c protocol-soap/soap.h)
 
 add_definitions(-DVERSION=\"${PROJECT_VERSION}\")
 
@@ -29,7 +30,7 @@ set(COMMON_LIBS fftw3 m doublefann)
 set(KAFKA_LIBS zookeeper_mt rdkafka jansson )
 
 #Executables
-add_executable(bmc_full ${COMMON_SOURCE_FILES} ${MQTT_SOURCE_FILES} ${KAFKA_SOURCE_FILES} ${REST_SOURCE_FILES} full.c)
+add_executable(bmc_full ${COMMON_SOURCE_FILES} ${MQTT_SOURCE_FILES} ${KAFKA_SOURCE_FILES} ${REST_SOURCE_FILES} ${SOAP_SOURCE_FILES} full.c)
 set_target_properties(bmc_full PROPERTIES COMPILE_DEFINITIONS FULL=1)
 TARGET_LINK_LIBRARIES(bmc_full ${KAFKA_LIBS} paho-mqtt3c curl ${LIBS_SYSTEM} ${COMMON_LIBS})
 
@@ -41,3 +42,6 @@ target_link_libraries(bmc_kafka ${KAFKA_LIBS} ${LIBS_SYSTEM} ${COMMON_LIBS})
 
 add_executable(bmc_rest ${COMMON_SOURCE_FILES} ${REST_SOURCE_FILES} protocol-rest/restmain.c)
 target_link_libraries(bmc_rest curl ${LIBS_SYSTEM} ${COMMON_LIBS})
+
+add_executable(bmc_soap ${COMMON_SOURCE_FILES} ${SOAP_SOURCE_FILES} protocol-soap/soapmain.c)
+target_link_libraries(bmc_soap curl ${LIBS_SYSTEM} ${COMMON_LIBS})
