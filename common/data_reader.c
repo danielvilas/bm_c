@@ -39,10 +39,10 @@ void readFileContents(struct dirent *dir, char* path, pCallbacks callbacks){
             last=log;
         }else{
             if(last.micros>log.micros && log.micros!=-1){
-                fprintf(stderr,"Dataset not clear (micros), parse in java spliter first");
+                fprintf(stderr,"Dataset not clear (micros), parse in java spliter first\n");
             }
             if(last.date>log.date && log.micros!=-1){
-                fprintf(stderr,"Dataset not clear (date), parse in java spliter first");
+                fprintf(stderr,"Dataset not clear (date), parse in java spliter first\n");
             }
         }
 
@@ -59,26 +59,28 @@ void readData(pCfg cfg, pCallbacks callbacks){
     printf("Reading Dataset: %s\n",cfg->dataset);
 
     char path[256];
+
     sprintf(path,"./data/sets/%s",cfg->dataset);
 
-    DIR           *d;
-    struct dirent *dir;
-    d = opendir(path);
-    int i=0;
-    if (d)
+
+    struct dirent **namelist;
+    int n;
+
+    n = scandir(path, &namelist, NULL, alphasort);
+
+    if (n!=-1)
     {
-        while ((dir = readdir(d)) != NULL)
-        {
-            if (dir->d_type == DT_REG) //i>0 omite el de las 15 que el primer paquete esta mal
+        for(int i=0;i<n;i++){
+            if (namelist[i]->d_type == DT_REG) //i>0 omite el de las 15 que el primer paquete esta mal
             {
                 //if(i>0)
-                readFileContents(dir,path, callbacks);
-                i++;
+                readFileContents(namelist[i],path, callbacks);
             }
         }
+        free(namelist);
 
-        closedir(d);
     }else{
+        perror("scandir");
         printf("Not Found: %s (%s)\n",path,strerror(errno));
     }
 

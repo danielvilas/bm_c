@@ -16,4 +16,7 @@ IF (${DETECT_MACPORTS} EQUAL 0)
     MESSAGE(STATUS "MAC PORTS FOUND found: ${MACPORTS_PREFIX}")
 ENDIF()
 
+include_directories(/usr/local/include)
+LINK_DIRECTORIES(${LINK_DIRECTORIES} /usr/local/lib)
+
 # Recommendation, also add a "brew --prefix" custom command to detect a homebrew build environment
