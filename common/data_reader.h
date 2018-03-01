@@ -8,5 +8,6 @@
 #include "common.h"
 
 void readData(pCfg cfg, pCallbacks callbacks);
+void printFiles();
 
 #endif //BMC_DATA_READER_H

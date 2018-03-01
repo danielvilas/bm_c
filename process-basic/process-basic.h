@@ -9,5 +9,5 @@
 #include "../common/common.h"
 
 void basicProcess(pLogPacket logPacket, pCallbacks callbacks);
-
+void printPackets();
 #endif //BMC_PROCESS_BASIC_H

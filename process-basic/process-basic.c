@@ -13,6 +13,8 @@
 #define REAL 0
 #define IMAG 1
 
+int packets=0;
+
 double getMagnitude(fftw_complex out[], int i){
     int pos = i*(FFT_SIZE/2)/500;
 
@@ -47,6 +49,7 @@ void fillData(fann_type *data, fann_type* res){
 }
 
 void basicProcess(pLogPacket logPacket, pCallbacks callbacks){
+    packets++;
     fftw_complex in[FFT_SIZE], out[FFT_SIZE];
     fftw_plan plan;
     plan = fftw_plan_dft_1d(FFT_SIZE,in, out, FFTW_FORWARD, FFTW_ESTIMATE);
@@ -92,6 +95,8 @@ void basicProcess(pLogPacket logPacket, pCallbacks callbacks){
     tParsedPacket packet;
     readParsedPacket(&packet,logPacket->logData[0].date,data);
     callbacks->client->send(callbacks->client,&packet);
+}
 
-
+void printPackets(){
+    printf("Packets: %i\n",packets);
 }

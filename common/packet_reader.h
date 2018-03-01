@@ -9,6 +9,6 @@
 #include "common.h"
 
 void packageReader(pLogData logData, pCallbacks callbacks);
-
+void printSamples();
 
 #endif //BMC_PACKET_READER_H

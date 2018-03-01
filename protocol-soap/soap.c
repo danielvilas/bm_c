@@ -11,6 +11,7 @@
 int soap_init(pClient self, pCfg cfg);
 int soap_send(pClient self, pParsedPacket data );
 int soap_close(pClient self);
+int sentMessages=0;
 
 pClient createSoapClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
@@ -89,7 +90,7 @@ int soap_send(pClient self, pParsedPacket data ){
             "</soapenv:Envelope>", buf, data->tv, data->bluray, data->appleTv, data->ipTv);
 
     curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, tmp);
-
+    sentMessages++;
     CURLcode ret = curl_easy_perform(hnd);
 
     return 0;
@@ -98,5 +99,6 @@ int soap_close(pClient self){
     pSoapObjs client =self->obj;
     CURL *hnd = client->hnd;
     curl_easy_duphandle(hnd);
+    printf("Messages: %i\n",sentMessages);
     return 0;
 }

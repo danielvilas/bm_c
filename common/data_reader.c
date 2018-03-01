@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 tLogData last;
+int files=0;
 
 void readFileContents(struct dirent *dir, char* path, pCallbacks callbacks){
     printf("%s\n", dir->d_name);
@@ -29,7 +30,7 @@ void readFileContents(struct dirent *dir, char* path, pCallbacks callbacks){
         printf("Not Found: %s (%s)\n",pathname,strerror(errno));
         return;
     }
-
+    files++;
     while ((read = getline(&line, &len, fp)) != -1) {
         //printf("Retrieved line of length %zu :\n", read);
         //printf("%s", line);
@@ -84,4 +85,8 @@ void readData(pCfg cfg, pCallbacks callbacks){
         printf("Not Found: %s (%s)\n",path,strerror(errno));
     }
 
+}
+
+void printFiles(){
+    printf("Files: %i\n",files);
 }

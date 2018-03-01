@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include "string.h"
 #include <MQTTClient.h>
+
 //#include <lzma.h>
 #include <inttypes.h>
+#include <zconf.h>
 
 #define CLIENTID    "bmc_mqtt"
 #define TOPIC       "AppliancesBucket"
@@ -14,6 +16,9 @@
 int mqtt_init(pClient self, pCfg cfg);
 int mqtt_send(pClient self, pParsedPacket data );
 int mqtt_close(pClient self);
+
+int sentMessages=0;
+volatile int pendingMessages;
 
 pClient createMqttClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
@@ -25,6 +30,30 @@ pClient createMqttClient(void){
     ret->obj=client;
     return ret;
 }
+
+void delivered(void *context, MQTTClient_deliveryToken dt)
+{
+    //printf("Message with token value %d delivery confirmed\n", dt);
+    pendingMessages--;
+}
+int msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message)
+{
+    int i;
+    char* payloadptr;
+    printf("Message arrived\n");
+    printf("     topic: %s\n", topicName);
+    printf("   message: ");
+    payloadptr = message->payload;
+    for(i=0; i<message->payloadlen; i++)
+    {
+        putchar(*payloadptr++);
+    }
+    putchar('\n');
+    MQTTClient_freeMessage(&message);
+    MQTTClient_free(topicName);
+    return 1;
+}
+
 
 int mqtt_init(pClient self, pCfg cfg){
 
@@ -52,11 +81,15 @@ int mqtt_init(pClient self, pCfg cfg){
     printf("%s\n",address);
     MQTTClient_create(client, address, CLIENTID,
     MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    MQTTClient_setCallbacks(*client, NULL, NULL, msgarrvd, delivered);
+
     if ((rc = MQTTClient_connect(*client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
         printf("Failed to connect, return code %d\n", rc);
         exit(-1);
     }
+
+
     return 0;
 }
 
@@ -80,6 +113,9 @@ int mqtt_send(pClient self, pParsedPacket data ){
     pubmsg.payloadlen = strlen(tmp);
     pubmsg.qos = QOS;
     pubmsg.retained = 0;
+
+    sentMessages++;
+    pendingMessages++;
     MQTTClient *client =(MQTTClient *)self->obj;
     //int rc;
     //shot and forgot
@@ -94,7 +130,15 @@ int mqtt_send(pClient self, pParsedPacket data ){
 }
 
 int mqtt_close(pClient self){
+
+    while(pendingMessages>0){
+        fprintf(stderr, "Pending Messages: %i\n", pendingMessages);
+        sleep(1);
+    }
+
     MQTTClient *client =(MQTTClient *)self->obj;
     MQTTClient_disconnect(client,100);
     MQTTClient_destroy(client);
+    printf("Messages: %i\n",sentMessages);
+    return 0;
 }

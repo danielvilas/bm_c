@@ -37,6 +37,7 @@ void app_main(pCfg cfg, pClient client) {
     if (cfg->continous) {
         runContinous(client);
     }
+    uint64_t start = get_posix_clock_time();
     pCallbacks callbacks = malloc(sizeof(tCallbacks));
     callbacks->client=client;
     callbacks->pushLogData=&packageReader;
@@ -45,7 +46,13 @@ void app_main(pCfg cfg, pClient client) {
     readData(cfg,callbacks);
 
     fann_destroy(callbacks->net);
+    printFiles();
+    printSamples();
+    printPackets();
     client->close(callbacks->client);
+    uint64_t end = get_posix_clock_time();
+    float milliseconds = (float)(end - start) / 1000;
+    printf("Time: %f ms\n", milliseconds);
 }
 
 void runContinous(pClient client){
