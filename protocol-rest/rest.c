@@ -12,7 +12,7 @@ int rest_init(pClient self, pCfg cfg);
 int rest_send(pClient self, pParsedPacket data );
 int rest_close(pClient self);
 
-int sentMessages=0;
+int sentMessagesRest=0;
 
 pClient createRestClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
@@ -73,7 +73,7 @@ int rest_send(pClient self, pParsedPacket data ){
             "}",data->date, data->tv,data->bluray,data->appleTv,data->ipTv);
 
     curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, tmp);
-    sentMessages++;
+    sentMessagesRest++;
     CURLcode ret = curl_easy_perform(hnd);
 
     return 0;
@@ -82,6 +82,6 @@ int rest_close(pClient self){
     pRestObjs client =self->obj;
     CURL *hnd = client->hnd;
     curl_easy_duphandle(hnd);
-    printf("Messages: %i\n",sentMessages);
+    printf("Messages: %i\n",sentMessagesRest);
     return 0;
 }

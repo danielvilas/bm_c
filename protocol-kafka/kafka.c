@@ -7,6 +7,8 @@
 #include <memory.h>
 #include <jansson.h>
 #include <errno.h>
+#include <zookeeper/zookeeper.h>
+
 
 #include "kafka.h"
 
@@ -19,8 +21,8 @@ int kafka_init(pClient self, pCfg cfg);
 int kafka_send(pClient self, pParsedPacket data );
 int kafka_close(pClient self);
 
-int sentMessages=0;
-volatile int pendingMessages=0;
+int sentMessagesKafka=0;
+volatile int pendingMessagesKafka=0;
 
 pClient createKafkaClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
@@ -144,7 +146,7 @@ static void msg_delivered (rd_kafka_t *rk,
         fprintf(stderr, "%% Message delivery failed: %s\n",
                 rd_kafka_err2str(error_code));
 
-    pendingMessages--;
+    pendingMessagesKafka--;
 }
 
 int kafka_init(pClient self, pCfg cfg){
@@ -223,8 +225,8 @@ int kafka_send(pClient self, pParsedPacket data ){
             "\"ipTv\":  %lf"
             "}",data->date, data->tv,data->bluray,data->bluray,data->ipTv);
 
-    pendingMessages++;
-    sentMessages++;
+    pendingMessagesKafka++;
+    sentMessagesKafka++;
 
     if (rd_kafka_produce(kafka->rkt, partition,
                          RD_KAFKA_MSG_F_COPY,
@@ -261,8 +263,8 @@ int kafka_send(pClient self, pParsedPacket data ){
 
 int kafka_close(pClient self){
 
-    while(pendingMessages>0) {
-        fprintf(stderr, "Pending Messages: %i\n", pendingMessages);
+    while(pendingMessagesKafka>0) {
+        fprintf(stderr, "Pending Messages: %i\n", pendingMessagesKafka);
         rd_kafka_poll(rk, 100);
     }
 
@@ -273,7 +275,8 @@ int kafka_close(pClient self){
     /* Let background threads clean up and terminate cleanly. */
         rd_kafka_wait_destroyed(2000);
 
-    printf("Messages: %i\n",sentMessages);
+    printf("Messages: %i\n",sentMessagesKafka);
     /** Free the zookeeper data. */
     zookeeper_close(kafka->zh);
+    return 0;
 }

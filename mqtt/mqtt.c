@@ -17,8 +17,8 @@ int mqtt_init(pClient self, pCfg cfg);
 int mqtt_send(pClient self, pParsedPacket data );
 int mqtt_close(pClient self);
 
-int sentMessages=0;
-volatile int pendingMessages;
+int sentMessagesMqtt=0;
+volatile int pendingMessagesMqtt;
 
 pClient createMqttClient(void){
     pClient ret = (pClient)malloc(sizeof(tClient));
@@ -34,7 +34,7 @@ pClient createMqttClient(void){
 void delivered(void *context, MQTTClient_deliveryToken dt)
 {
     //printf("Message with token value %d delivery confirmed\n", dt);
-    pendingMessages--;
+    pendingMessagesMqtt--;
 }
 int msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message)
 {
@@ -114,8 +114,8 @@ int mqtt_send(pClient self, pParsedPacket data ){
     pubmsg.qos = QOS;
     pubmsg.retained = 0;
 
-    sentMessages++;
-    pendingMessages++;
+    sentMessagesMqtt++;
+    pendingMessagesMqtt++;
     MQTTClient *client =(MQTTClient *)self->obj;
     //int rc;
     //shot and forgot
@@ -131,14 +131,14 @@ int mqtt_send(pClient self, pParsedPacket data ){
 
 int mqtt_close(pClient self){
 
-    while(pendingMessages>0){
-        fprintf(stderr, "Pending Messages: %i\n", pendingMessages);
+    while(pendingMessagesMqtt>0){
+        fprintf(stderr, "Pending Messages: %i\n", pendingMessagesMqtt);
         sleep(1);
     }
 
     MQTTClient *client =(MQTTClient *)self->obj;
     MQTTClient_disconnect(client,100);
     MQTTClient_destroy(client);
-    printf("Messages: %i\n",sentMessages);
+    printf("Messages: %i\n",sentMessagesMqtt);
     return 0;
 }
