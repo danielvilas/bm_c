@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "string.h"
+#include <unistd.h>
 #include <MQTTClient.h>
 
 //#include <lzma.h>
 #include <inttypes.h>
-#include <zconf.h>
+//#include <zconf.h>
 
 #define CLIENTID    "bmc_mqtt"
 #define TOPIC       "AppliancesBucket"
