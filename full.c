@@ -27,4 +27,5 @@ int main(int argc, char** argv){
 		}
 		app_main(&cfg,client);
 	}
+return (0);
 }
